@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material Search</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="search-container">
+            <div class="greeting">
+                <h1 id="greeting-text">Good Morning</h1>
+                <p id="date-time"></p>
+            </div>
+            <div class="search-box">
+                <div class="search-input-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchInput" placeholder="Search the web...">
+                    <button id="voiceSearch" class="voice-btn">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                </div>
+                <button id="searchButton" class="material-button">
+                    Search
+                </button>
+            </div>
+            <div class="search-engines">
+                <button class="engine-btn active" data-engine="google">Google</button>
+                <button class="engine-btn" data-engine="bing">Bing</button>
+                <button class="engine-btn" data-engine="duckduckgo">DuckDuckGo</button>
+            </div>
+            <div class="quick-links">
+                <div class="link-group">
+                    <h3>Popular</h3>
+                    <div class="links-grid">
+                        <a href="https://www.google.com" target="_blank" class="material-card">
+                            <i class="fab fa-google"></i>
+                            <span>Google</span>
+                        </a>
+                        <a href="https://www.github.com" target="_blank" class="material-card">
+                            <i class="fab fa-github"></i>
+                            <span>GitHub</span>
+                        </a>
+                        <a href="https://www.youtube.com" target="_blank" class="material-card">
+                            <i class="fab fa-youtube"></i>
+                            <span>YouTube</span>
+                        </a>
+                        <a href="https://www.reddit.com" target="_blank" class="material-card">
+                            <i class="fab fa-reddit"></i>
+                            <span>Reddit</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="searchResults" class="search-results"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 
