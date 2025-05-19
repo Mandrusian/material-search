@@ -87,67 +87,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Function to perform search
-    const performSearch = async () => {
+    const performSearch = () => {
         const query = searchInput.value.trim();
         if (!query) return;
 
-        if (currentEngine === 'duckduckgo') {
-            // Show loading state
-            searchResults.innerHTML = '<div class="loading">Searching...</div>';
-            searchResults.classList.add('active');
-
-            try {
-                // Make API request to DuckDuckGo
-                const response = await fetch(
-                    `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&pretty=1`
-                );
-                const data = await response.json();
-
-                // Display results
-                let resultsHTML = '';
-                if (data.RelatedTopics && data.RelatedTopics.length > 0) {
-                    // Add AI summary at the top
-                    resultsHTML += generateAISummary(data.RelatedTopics);
-                    
-                    // Add individual results
-                    resultsHTML += data.RelatedTopics.map(item => {
-                        if (item.Text && item.FirstURL) {
-                            return `
-                                <div class="result-card">
-                                    <h3><a href="${item.FirstURL}" target="_blank">${item.Text.split(' - ')[0]}</a></h3>
-                                    <p>${item.Text}</p>
-                                    <div class="result-meta">
-                                        <span>${new URL(item.FirstURL).hostname}</span>
-                                    </div>
-                                </div>
-                            `;
-                        }
-                        return '';
-                    }).join('');
-                } else {
-                    resultsHTML = '<p>No results found</p>';
-                }
-
-                searchResults.innerHTML = resultsHTML;
-            } catch (error) {
-                searchResults.innerHTML = '<p>Error performing search. Please try again.</p>';
-                console.error('Search error:', error);
-            }
-        } else {
-            // For other search engines, redirect to their search page
-            let searchUrl;
-            switch (currentEngine) {
-                case 'google':
-                    searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
-                    break;
-                case 'bing':
-                    searchUrl = `https://www.bing.com/search?q=${encodeURIComponent(query)}`;
-                    break;
-                default:
-                    searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
-            }
-            window.open(searchUrl, '_blank');
+        let searchUrl;
+        switch (currentEngine) {
+            case 'google':
+                searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                break;
+            case 'bing':
+                searchUrl = `https://www.bing.com/search?q=${encodeURIComponent(query)}`;
+                break;
+            case 'duckduckgo':
+            default:
+                searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
+                break;
         }
+
+        // Open search in new tab
+        window.open(searchUrl, '_blank');
     };
 
     // Search on button click
