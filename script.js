@@ -7,9 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const dateTimeElement = document.getElementById('date-time');
     const engineButtons = document.querySelectorAll('.engine-btn');
 
-    // API Configuration
-    const API_KEY = 'AIzaSyC2ThDz5-KVi7wBFeXPR6EC-xWNBCEDfPA'; // Replace with your API key
-    const SEARCH_ENGINE_ID = 'c18f3250b0b5c45f0'; // Replace with your Search Engine ID
+    // API Configuration - Using environment variables
+    const API_KEY = process.env.GOOGLE_API_KEY || 'YOUR_API_KEY';
+    const SEARCH_ENGINE_ID = process.env.SEARCH_ENGINE_ID || 'YOUR_SEARCH_ENGINE_ID';
 
     let currentEngine = 'google';
     let recognition = null;
