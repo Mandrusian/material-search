@@ -7,11 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dateTimeElement = document.getElementById('date-time');
     const engineButtons = document.querySelectorAll('.engine-btn');
 
-    // API Configuration - Using environment variables
-    const API_KEY = process.env.GOOGLE_API_KEY || 'YOUR_API_KEY';
-    const SEARCH_ENGINE_ID = process.env.SEARCH_ENGINE_ID || 'YOUR_SEARCH_ENGINE_ID';
-
-    let currentEngine = 'google';
+    let currentEngine = 'duckduckgo';
     let recognition = null;
 
     // Function to generate AI summary from search results
@@ -95,34 +91,39 @@ document.addEventListener('DOMContentLoaded', () => {
         const query = searchInput.value.trim();
         if (!query) return;
 
-        if (currentEngine === 'google') {
+        if (currentEngine === 'duckduckgo') {
             // Show loading state
             searchResults.innerHTML = '<div class="loading">Searching...</div>';
             searchResults.classList.add('active');
 
             try {
-                // Make API request to Google Custom Search
+                // Make API request to DuckDuckGo
                 const response = await fetch(
-                    `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${SEARCH_ENGINE_ID}&q=${encodeURIComponent(query)}`
+                    `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&pretty=1`
                 );
                 const data = await response.json();
 
                 // Display results
                 let resultsHTML = '';
-                if (data.items && data.items.length > 0) {
+                if (data.RelatedTopics && data.RelatedTopics.length > 0) {
                     // Add AI summary at the top
-                    resultsHTML += generateAISummary(data.items);
+                    resultsHTML += generateAISummary(data.RelatedTopics);
                     
                     // Add individual results
-                    resultsHTML += data.items.map(item => `
-                        <div class="result-card">
-                            <h3><a href="${item.link}" target="_blank">${item.title}</a></h3>
-                            <p>${item.snippet}</p>
-                            <div class="result-meta">
-                                <span>${item.displayLink}</span>
-                            </div>
-                        </div>
-                    `).join('');
+                    resultsHTML += data.RelatedTopics.map(item => {
+                        if (item.Text && item.FirstURL) {
+                            return `
+                                <div class="result-card">
+                                    <h3><a href="${item.FirstURL}" target="_blank">${item.Text.split(' - ')[0]}</a></h3>
+                                    <p>${item.Text}</p>
+                                    <div class="result-meta">
+                                        <span>${new URL(item.FirstURL).hostname}</span>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        return '';
+                    }).join('');
                 } else {
                     resultsHTML = '<p>No results found</p>';
                 }
@@ -136,14 +137,14 @@ document.addEventListener('DOMContentLoaded', () => {
             // For other search engines, redirect to their search page
             let searchUrl;
             switch (currentEngine) {
+                case 'google':
+                    searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                    break;
                 case 'bing':
                     searchUrl = `https://www.bing.com/search?q=${encodeURIComponent(query)}`;
                     break;
-                case 'duckduckgo':
-                    searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
-                    break;
                 default:
-                    searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                    searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
             }
             window.open(searchUrl, '_blank');
         }
